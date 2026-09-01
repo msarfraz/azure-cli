@@ -18,8 +18,10 @@ while [ $counter -gt 0 ]; do
         # dnf install azure-cli-2.67.0-1.el9
         $DNF_COMMAND install azure-cli-${CLI_VERSION}-1$(rpm --eval %{?dist}) -y
     else
-        # tdnf install azure-cli=2.67.0
-        $DNF_COMMAND install azure-cli==${CLI_VERSION} -y
+        # tdnf install azure-cli-2.67.0
+        # Use NEVRA (name-version) form instead of the classic tdnf `name==version`
+        # syntax: Azure Linux 4.0's tdnf is backed by dnf5, which does not accept `==`.
+        $DNF_COMMAND install azure-cli-${CLI_VERSION} -y
     fi
     ACTUAL_VERSION=$(az version | sed -n 's|"azure-cli": "\(.*\)",|\1|p' | sed 's|[[:space:]]||g')
     echo "actual version:${ACTUAL_VERSION}"
